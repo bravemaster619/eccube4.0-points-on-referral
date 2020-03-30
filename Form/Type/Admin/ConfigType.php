@@ -2,8 +2,8 @@
 
 namespace Plugin\PointsOnReferral\Form\Type\Admin;
 
+use Eccube\Form\Type\ToggleSwitchType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,31 +11,31 @@ class ConfigType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
 
-        $builder->add('referrer_rewards_enabled', CheckboxType::class, array(
+        $builder->add('referrer_rewards_enabled', ToggleSwitchType::class, array(
             'required' => false,
-            'label' => 'admin.form.rewards.referrer.enabled.label',
+            'label' => 'points_on_referral.admin.config.form.referrer.enabled.label',
             'mapped' => true,
         ))->add('referrer_rewards', IntegerType::class, array(
             'required' => true,
-            'label' => 'admin.form.rewards.referrer.point.label',
+            'label' => 'points_on_referral.admin.config.form.referrer.point.label',
             'mapped' => true,
             'attr' => array(
-                'placeholder' => 'admin.form.rewards.referrer.point.placeholder'
+                'placeholder' => 'points_on_referral.admin.config.form.referrer.point.placeholder'
             ),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\GreaterThanOrEqual(0)
             )
-        ))->add('referee_rewards_enabled', CheckboxType::class, array(
+        ))->add('referee_rewards_enabled', ToggleSwitchType::class, array(
             'required' => false,
-            'label' => 'admin.form.rewards.referee.enabled.label',
+            'label' => 'points_on_referral.admin.config.form.referee.enabled.label',
             'mapped' => true
         ))->add('referee_rewards', IntegerType::class, array(
             'required' => true,
-            'label' => 'admin.form.rewards.referee.point.label',
+            'label' => 'points_on_referral.admin.config.form.referee.point.label',
             'mapped' => true,
             'attr' => array(
-                'placeholder' => 'admin.form.rewards.referee.point.placeholder'
+                'placeholder' => 'points_on_referral.admin.config.form.referee.point.placeholder'
             ),
             'constraints' => array(
                 new Assert\NotBlank(),
