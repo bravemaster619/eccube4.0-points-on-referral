@@ -3,7 +3,7 @@
 namespace Plugin\PointsOnReferral\Repository;
 
 use Eccube\Repository\AbstractRepository;
-use Plugin\PointsOnSignUp\Entity\Config;
+use Plugin\PointsOnReferral\Entity\Config;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class ConfigRepository extends AbstractRepository {
@@ -18,11 +18,10 @@ class ConfigRepository extends AbstractRepository {
     }
 
     /**
-     * @param int $id
      * @return \Plugin\PointsOnReferral\Entity\Config|null
      */
-    public function get($id = 1) {
-        return $this->find($id);
+    public function getConfig() {
+        return $this->findOneBy([], ['id' => 'desc']);
     }
 
 }
