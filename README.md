@@ -1,12 +1,12 @@
-#PointsOnReferral
+# PointsOnReferral
 
 PointsOnReferral is an [EC-CUBE 4.0](https://doc4.ec-cube.net/) plugin that rewards users points on referral.
 
-#Requirement
+# Requirement
 
 - EC-CUBE v4.0 or higher
 
-#Installation Guide
+# Installation Guide
 
 See the [official guide for plugin installation](https://doc4.ec-cube.net/plugin_install).
 
