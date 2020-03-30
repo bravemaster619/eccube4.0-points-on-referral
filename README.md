@@ -4,7 +4,7 @@ PointsOnReferral is an [EC-CUBE 4.0](https://doc4.ec-cube.net/) plugin that rewa
 
 # Requirement
 
-- EC-CUBE v4.0 or higher
+- EC-CUBE v 4.0.3 or higher
 
 # Installation Guide
 
