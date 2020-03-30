@@ -1,6 +1,19 @@
-admin.plugin.enable.error.point_not_found: お友達紹介ポイントプラグインを利用するにはポイントプラグインをインストール・有効にする必要があります。
+points_on_referral.admin.config.title: お友達紹介ポイント付与
+points_on_referral.admin.config.subtitle: プラグイン一覧
+points_on_referral.admin.config.form.title: 設定
+points_on_referral.admin.config.form.referrer.enabled.label: 紹介元会員にポイント付与
+points_on_referral.admin.config.form.referrer.point.label: 紹介元会員のポイント
+points_on_referral.admin.config.form.referrer.point.placeholder: 紹介元会員のポイントを入力してください
+points_on_referral.admin.config.form.referee.enabled.label: 紹介先会員にポイント付与
+points_on_referral.admin.config.form.referee.point.label: 紹介先会員のポイント
+points_on_referral.admin.config.form.referee.point.placeholder: 紹介先会員のポイントを入力してください
+points_on_referral.admin.config.save.success: 登録しました
+points_on_referral.admin.config.save.fail: 登録に失敗しました
+points_on_referral.admin.config.conversion.save: 登録
+points_on_referral.admin.config.conversion.back: プラグイン一覧
+
 admin.form.rewards.title: お友達紹介ポイント設定
-admin.form.rewards.referrer.enabled.label: 紹介元会員にポイントを付与
+admin.form.rewards.referrer.enabled.label: 紹介元会員にポイント付与
 admin.form.rewards.referrer.point.label: 紹介元会員のポイント
 admin.form.rewards.referrer.point.placeholder: 紹介元会員のポイントを入力してください。
 admin.form.rewards.referee.enabled.label: 紹介先会員にポイント付与
