@@ -2,11 +2,11 @@
 
 namespace Plugin\PointsOnReferral\Tests\Repository;
 
+use Eccube\Tests\EccubeTestCase;
 use Plugin\PointsOnReferral\Entity\Config;
 use Plugin\PointsOnReferral\Repository\ConfigRepository;
-use Plugin\PointsOnReferral\Tests\PointsOnReferralBaseTestCase;
 
-class ConfigRepositoryTest extends PointsOnReferralBaseTestCase {
+class ConfigRepositoryTest extends EccubeTestCase {
 
     /**
      * @var ConfigRepository
@@ -15,16 +15,15 @@ class ConfigRepositoryTest extends PointsOnReferralBaseTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->configRepository = $this->container->get(Config::class);
-
+        $this->configRepository = $this->entityManager->getRepository(Config::class);
     }
 
     public function testGetConfig() {
         $this->deleteAllRows(['plg_points_on_referral_config']);
         $Config = $this->configRepository->getConfig();
-        $this->expected = null;
-        $this->actual = $Config;
-        $this->verify("should return null when table is empty");
+        $this->assertNotEmpty($Config, "should return default value if table is empty");
+        $this->assertGreaterThan(0, $this->configRepository->count([]), "should persist default value if table is empty");
+
         $Config = new Config();
         $Config->setReferrerRewardsEnabled(true)
             ->setReferrerRewards(1500)

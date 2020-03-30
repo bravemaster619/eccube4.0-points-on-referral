@@ -18,10 +18,22 @@ class ConfigRepository extends AbstractRepository {
     }
 
     /**
-     * @return \Plugin\PointsOnReferral\Entity\Config|null
+     * @return \Plugin\PointsOnReferral\Entity\Config
      */
     public function getConfig() {
-        return $this->findOneBy([], ['id' => 'desc']);
+        $Config = $this->findOneBy([], ['id' => 'desc']);
+        if ($Config) {
+            return $Config;
+        } else {
+            $Config = new Config();
+            $Config->setReferrerRewardsEnabled(false)
+                ->setReferrerRewards(0)
+                ->setRefereeRewardsEnabled(false)
+                ->setRefereeRewards(0);
+            $this->save($Config);
+            $this->getEntityManager()->flush();
+            return $Config;
+        }
     }
 
 }
