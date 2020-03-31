@@ -129,10 +129,16 @@ class PointsOnReferralEvent implements EventSubscriberInterface {
         $Referee = $event->getArgument("Customer");
         log_info("referee id: " . $Referee->getId());
         $RefereeRef = $this->referralRepository->findOrCreateByCustomer($Referee);
+        if (!$RefereeRef->getReferrerId()) {
+            log_info("referrer id empty");
+            log_info("--- referral rewards end ---");
+            return;
+        }
         $Referrer = $this->customerRepository->find($RefereeRef->getReferrerId());
         if (!$Referrer) {
             log_info("referrer not found");
             log_info("--- referral rewards end ---");
+            return;
         }
         log_info("referrer id: " . $Referrer->getId());
         // save history
