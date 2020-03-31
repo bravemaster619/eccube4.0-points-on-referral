@@ -1,6 +1,6 @@
 {
     "name": "ec-cube/PointsOnReferral",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "友達紹介ポイント付与",
     "type": "eccube-plugin",
     "require": {
