@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 class Config {
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", options={"unsigned":true})
      * @ORM\Id
@@ -29,9 +29,9 @@ class Config {
     private $referrer_rewards_enabled;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="referrer_rewards", type="integer", options={"default": 0})
+     * @ORM\Column(name="referrer_rewards", type="decimal", precision=12, scale=0, options={"unsigned":false,"default":0})
      */
     private $referrer_rewards;
 
@@ -43,14 +43,14 @@ class Config {
     private $referee_rewards_enabled;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="referee_rewards", type="integer", options={"default": 0})
+     * @ORM\Column(name="referee_rewards", type="decimal", precision=12, scale=0, options={"unsigned":false,"default":0})
      */
     private $referee_rewards;
 
     /**
-     * @return int
+     * @return integer
      */
     public function getId() {
         return $this->id;
@@ -64,7 +64,7 @@ class Config {
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getReferrerRewards() {
         return $this->referrer_rewards;
@@ -78,7 +78,7 @@ class Config {
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getRefereeRewards() {
         return $this->referee_rewards;
