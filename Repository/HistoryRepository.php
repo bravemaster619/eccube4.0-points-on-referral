@@ -9,7 +9,6 @@ use Eccube\Entity\Customer;
 use Eccube\Repository\AbstractRepository;
 use Plugin\PointsOnReferral\Entity\Config;
 use Plugin\PointsOnReferral\Entity\History;
-use Plugin\PointsOnReferral\Entity\PointsOnReferralHistory;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class HistoryRepository extends AbstractRepository {
