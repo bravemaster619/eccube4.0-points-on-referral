@@ -4,10 +4,12 @@
 namespace Plugin\PointsOnReferral\Repository;
 
 
+use Eccube\Common\Constant;
 use Eccube\Entity\Customer;
 use Eccube\Repository\AbstractRepository;
 use Plugin\PointsOnReferral\Entity\Config;
 use Plugin\PointsOnReferral\Entity\History;
+use Plugin\PointsOnReferral\Entity\PointsOnReferralHistory;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class HistoryRepository extends AbstractRepository {
@@ -56,4 +58,26 @@ class HistoryRepository extends AbstractRepository {
         $this->getEntityManager()->flush();
         return $History;
     }
+
+    /**
+     * @param Customer $Customer
+     * @param int $ownership
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function getQueryBuilderByCustomer(Customer $Customer, $ownership = History::REFERRER) {
+        $qb = $this->createQueryBuilder('h');
+        if ($ownership === History::REFERRER) {
+            $qb->where('h.referrer_id = :customer_id');
+            $qb->andWhere('h.visible_to_referrer = :visible');
+        } else if ($ownership === History::REFEREE) {
+            $qb->where('h.referee_id = :customer_id');
+            $qb->andWhere('h.visible_to_referee = :visible');
+        }
+        $qb->setParameter('customer_id', $Customer->getId());
+        $qb->setParameter('visible', Constant::ENABLED);
+        $qb->addOrderBy('h.create_date', 'DESC');
+        $qb->addOrderBy('h.id', 'DESC');
+        return $qb;
+    }
+
 }
