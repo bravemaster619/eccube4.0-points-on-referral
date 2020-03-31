@@ -82,7 +82,7 @@ class PluginManager extends AbstractPluginManager {
     }
 
     protected function unregisterPages(ContainerInterface $container) {
-        foreach($this->pageUrls as $url) {
+        foreach($this->pageUrls as $url => $name) {
             $this->removePage($container->get('doctrine.orm.entity_manager'), $url);
         }
     }
@@ -109,11 +109,13 @@ class PluginManager extends AbstractPluginManager {
 
     protected function removePage(EntityManagerInterface $em, $url) {
         $Page = $em->getRepository(Page::class)->findOneBy(['url' => $url]);
+
         if (!$Page) {
             return;
         }
         foreach ($Page->getPageLayouts() as $PageLayout) {
             $em->remove($PageLayout);
+            $em->flush();
         }
         $em->remove($Page);
         $em->flush();
