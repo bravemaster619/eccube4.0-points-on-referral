@@ -4,17 +4,31 @@ namespace Plugin\PointsOnReferral;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Entity\Customer;
+use Eccube\Entity\Layout;
+use Eccube\Entity\Page;
+use Eccube\Entity\PageLayout;
 use Eccube\Plugin\AbstractPluginManager;
+use Eccube\Repository\PageRepository;
 use Plugin\PointsOnReferral\Entity\Config;
 use Plugin\PointsOnReferral\Entity\Referral;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class PluginManager extends AbstractPluginManager {
 
+    protected $pageUrls = [
+        'mypage_referral' => 'MYページ/ご紹介履歴'
+    ];
+
     public function enable(array $meta, ContainerInterface $container) {
         $em = $container->get('doctrine.orm.entity_manager');
         $Config = $this->createConfig($em);
         $this->updateReferrals($em);
+        $this->registerPages($container);
+    }
+
+    public function uninstall(array $meta, ContainerInterface $container) {
+        parent::uninstall($meta, $container);
+        $this->unregisterPages($container);
     }
 
     /**
@@ -41,20 +55,67 @@ class PluginManager extends AbstractPluginManager {
      */
     protected function updateReferrals(EntityManagerInterface $em) {
         $Customers = $em->getRepository(Customer::class)->findAll();
-        $processedCustomerIds = [];
+        $customer_ids = [];
         foreach($Customers as $Customer) {
             $em->getRepository(Referral::class)->findOrCreateByCustomer($Customer);
-            $processedCustomerIds[] = $Customer->getId();
+            $customer_ids[] = $Customer->getId();
         }
-        if ($processedCustomerIds) {
+        if ($customer_ids) {
             $qb = $em->createQueryBuilder();
             $query = $qb->from(Referral::class, 'r')
-                ->where('r.customer_id NOT IN (:processed_ids)')
-                ->setParameter('processed_ids', $processedCustomerIds, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
+                ->where('r.customer_id NOT IN (:customer_ids)')
+                ->setParameter('customer_ids', $customer_ids, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY)
                 ->delete()
                 ->getQuery();
             $query->execute();
             $em->flush();
         }
+    }
+
+    protected function registerPages(ContainerInterface $container) {
+        foreach($this->pageUrls as $url => $name) {
+            $Page = $container->get(PageRepository::class)->findOneBy(['url' => $url]);
+            if (!$Page) {
+                $this->createPage($container->get('doctrine.orm.entity_manager'), $name, $url);
+            }
+        }
+    }
+
+    protected function unregisterPages(ContainerInterface $container) {
+        foreach($this->pageUrls as $url) {
+            $this->removePage($container->get('doctrine.orm.entity_manager'), $url);
+        }
+    }
+
+    protected function createPage(EntityManagerInterface $em, $name, $url) {
+        $Page = new Page();
+        $Page->setEditType(Page::EDIT_TYPE_DEFAULT)
+            ->setName($name)
+            ->setUrl($url)
+            ->setFileName('@PointsOnReferral/default/Mypage/referral');
+
+        $em->persist($Page);
+        $em->flush();
+        $Layout = $em->find(Layout::class, Layout::DEFAULT_LAYOUT_UNDERLAYER_PAGE);
+        $PageLayout = new PageLayout();
+        $PageLayout->setPage($Page)
+            ->setPageId($Page->getId())
+            ->setLayout($Layout)
+            ->setLayoutId($Layout->getId())
+            ->setSortNo(0);
+        $em->persist($PageLayout);
+        $em->flush();
+    }
+
+    protected function removePage(EntityManagerInterface $em, $url) {
+        $Page = $em->getRepository(Page::class)->findOneBy(['url' => $url]);
+        if (!$Page) {
+            return;
+        }
+        foreach ($Page->getPageLayouts() as $PageLayout) {
+            $em->remove($PageLayout);
+        }
+        $em->remove($Page);
+        $em->flush();
     }
 }

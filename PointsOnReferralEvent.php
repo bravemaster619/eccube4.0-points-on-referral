@@ -4,14 +4,21 @@ namespace Plugin\PointsOnReferral;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Eccube\Event\EventArgs;
+use Eccube\Event\TemplateEvent;
 use Eccube\Repository\CustomerRepository;
 use Plugin\PointsOnReferral\Repository\ConfigRepository;
 use Plugin\PointsOnReferral\Repository\HistoryRepository;
 use Plugin\PointsOnReferral\Repository\ReferralRepository;
 use Plugin\PointsOnReferral\Service\ReferralService;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PointsOnReferralEvent implements EventSubscriberInterface {
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
     /**
      * @var EntityManagerInterface
@@ -45,6 +52,7 @@ class PointsOnReferralEvent implements EventSubscriberInterface {
 
     /**
      * PointsOnReferralEvent constructor
+     * @param ContainerInterface $container
      * @param EntityManagerInterface $entityManager
      * @param CustomerRepository $customerRepository
      * @param ConfigRepository $configRepository
@@ -53,6 +61,7 @@ class PointsOnReferralEvent implements EventSubscriberInterface {
      * @param ReferralService $referralService
      */
     public function __construct(
+        ContainerInterface $container,
         EntityManagerInterface $entityManager,
         CustomerRepository $customerRepository,
         ConfigRepository $configRepository,
@@ -60,6 +69,7 @@ class PointsOnReferralEvent implements EventSubscriberInterface {
         HistoryRepository $historyRepository,
         ReferralService $referralService
     ) {
+        $this->container = $container;
         $this->entityManager = $entityManager;
         $this->customerRepository = $customerRepository;
         $this->configRepository = $configRepository;
@@ -70,9 +80,21 @@ class PointsOnReferralEvent implements EventSubscriberInterface {
 
     public static function getSubscribedEvents() {
         return [
-            'front.entry.index.initialize' => 'onFrontEntryIndexInitialize',
-            'front.entry.index.complete' => 'onFrontEntryIndexComplete',
-            'front.entry.activate.complete' => 'onFrontEntryActivateComplete'
+            // hooks for entry
+            'front.entry.index.initialize'                      =>  'onFrontEntryIndexInitialize',
+            'front.entry.index.complete'                        =>  'onFrontEntryIndexComplete',
+            'front.entry.activate.complete'                     =>  'onFrontEntryActivateComplete',
+            // hooks for My page templates
+            'Mypage/change.twig'                                =>  'onRenderMyPageBefore',
+            'Mypage/change_complete.twig'                       =>  'onRenderMyPageBefore',
+            'Mypage/delivery.twig'                              =>  'onRenderMyPageBefore',
+            'Mypage/delivery_edit.twig'                         =>  'onRenderMyPageBefore',
+            'Mypage/index.twig'                                 =>  'onRenderMyPageBefore',
+            'Mypage/history.twig'                               =>  'onRenderMyPageBefore',
+            'Mypage/favorite.twig'                              =>  'onRenderMyPageBefore',
+            'Mypage/withdraw.twig'                              =>  'onRenderMyPageBefore',
+            'Mypage/withdraw_confirm.twig'                      =>  'onRenderMyPageBefore',
+            '@PointsOnReferral/default/Mypage/referral.twig'    =>  'onRenderMyPageBefore'
         ];
     }
 
@@ -84,10 +106,6 @@ class PointsOnReferralEvent implements EventSubscriberInterface {
         }
     }
 
-    function println($msg) {
-        echo $msg . "\n";
-    }
-    
     public function onFrontEntryIndexComplete(EventArgs $event) {
         log_info("--- referral start ---");
         $Referee = $event->getArgument('Customer');
@@ -162,7 +180,10 @@ class PointsOnReferralEvent implements EventSubscriberInterface {
             log_info("referrer point after rewards: " . $Referrer->getPoint());
         }
         log_info("--- referral rewards end ---");
+    }
 
+    public function onRenderMyPageBefore(TemplateEvent $event) {
+        $event->addSnippet('@PointsOnReferral/default/Mypage/navi_add.twig');
     }
 
 }
