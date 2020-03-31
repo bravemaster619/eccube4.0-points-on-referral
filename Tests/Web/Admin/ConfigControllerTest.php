@@ -15,6 +15,7 @@ class ConfigControllerTest extends AbstractAdminWebTestCase {
 
     public function setUp() {
         parent::setUp();
+
         $this->configRepository = $this->entityManager->getRepository(Config::class);
     }
 
@@ -29,7 +30,7 @@ class ConfigControllerTest extends AbstractAdminWebTestCase {
             "_token" => "dummy",
             "referrer_rewards_enabled" => 1,
             "referrer_rewards" => "2500",
-            "referee_rewards_enabled" => false, // request param should be empty for false
+            "referee_rewards_enabled" => null, // request param should be empty for false
             "referee_rewards" => "1000"
         ];
 
@@ -50,7 +51,7 @@ class ConfigControllerTest extends AbstractAdminWebTestCase {
             "_token" => "dummy",
             "referrer_rewards_enabled" => 1,
             "referrer_rewards" => "2500",
-            "referee_rewards_enabled" => false, // request param should be empty for false
+            "referee_rewards_enabled" => null, // request param should be empty for false
             "referee_rewards" => "-1000"
         ];
 

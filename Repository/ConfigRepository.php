@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 class ConfigRepository extends AbstractRepository {
 
     /**
-     * ConfigRepository constructor.
+     * ConfigRepository constructor
      *
      * @param RegistryInterface $registry
      */
