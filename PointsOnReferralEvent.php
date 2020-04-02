@@ -83,7 +83,7 @@ class PointsOnReferralEvent implements EventSubscriberInterface {
             // hooks for entry
             'front.entry.index.initialize'                      =>  'onFrontEntryIndexInitialize',
             'front.entry.index.complete'                        =>  'onFrontEntryIndexComplete',
-            'front.entry.activate.complete'                     =>  'onFrontEntryActivateComplete',
+            'front.entry.activate.complete'                     =>  ['onFrontEntryActivateComplete', -99],
             // hooks for My page templates
             'Mypage/change.twig'                                =>  'onRenderMyPageBefore',
             'Mypage/change_complete.twig'                       =>  'onRenderMyPageBefore',
