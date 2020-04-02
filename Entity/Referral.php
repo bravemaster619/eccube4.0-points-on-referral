@@ -28,14 +28,14 @@ class Referral {
     /**
      * @var integer
      *
-     * @ORM\Column(name="customer_id", type="integer", nullable=false)
+     * @ORM\Column(name="customer_id", type="integer", nullable=false, options={"unsigned":true})
      */
     private $customer_id;
 
     /**
      * Referrer customer id, it's not a plugin customer id
      * @var integer
-     * @ORM\Column(name="referrer_id", type="integer", nullable=true)
+     * @ORM\Column(name="referrer_id", type="integer", nullable=true, options={"unsigned":true})
      */
     private $referrer_id;
 
